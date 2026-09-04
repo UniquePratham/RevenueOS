@@ -101,45 +101,39 @@ export function Sidebar({
   ];
 
   return (
-    <aside className="w-64 border-r border-slate-800/80 bg-fintech-navy/95 flex flex-col justify-between shrink-0 h-screen sticky top-0 overflow-y-auto">
+    <aside className="w-64 border-r border-[#E3DDD2] bg-[#FFF9EC] flex flex-col justify-between shrink-0 h-screen sticky top-0 overflow-y-auto">
       <div>
         {/* Brand Header */}
-        <div className="p-5 border-b border-slate-800/80 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-sky-600 via-cyan-500 to-indigo-500 flex items-center justify-center shadow-md shadow-sky-500/20">
-              <Sparkles className="h-4 w-4 text-white" />
+        <div className="p-5 border-b border-[#E3DDD2] flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-8 rounded-full bg-[#141413] flex items-center justify-center text-[#FFF9EC]">
+              <Sparkles className="h-4 w-4 text-[#FFF9EC]" />
             </div>
             <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-bold text-base tracking-tight text-white font-mono">
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-base tracking-tight text-[#141413] font-mono">
                   RevenueOS
                 </span>
-                <span className="rounded bg-sky-500/10 px-1.5 py-0.2 text-[10px] font-semibold text-sky-400 border border-sky-500/30">
-                  v2.4
-                </span>
               </div>
-              <p className="text-[10px] text-slate-400">Autonomous Merchant Engine</p>
+              <p className="text-[10px] text-[#6B6862]">Autonomous Merchant Engine</p>
             </div>
           </div>
         </div>
 
         {/* Live System Status Pill */}
-        <div className="mx-4 my-3 rounded-lg border border-slate-800 bg-slate-900/60 p-2.5 flex items-center justify-between text-xs">
+        <div className="mx-4 my-3 rounded-full border border-[#E3DDD2] bg-[#F5EFE2] px-3.5 py-2 flex items-center justify-between text-xs">
           <div className="flex items-center gap-2">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span className="font-medium text-slate-300">Loop Status:</span>
+            <span className="h-2 w-2 rounded-full bg-[#1E824C]"></span>
+            <span className="font-medium text-[#6B6862]">Loop Status</span>
           </div>
-          <span className="font-mono text-[11px] font-semibold text-emerald-400">AUTONOMOUS</span>
+          <span className="font-mono text-[11px] font-semibold text-[#141413]">AUTONOMOUS</span>
         </div>
 
         {/* Navigation List */}
         <nav className="p-3 space-y-4">
           {navItems.map((group, gIdx) => (
             <div key={gIdx} className="space-y-1">
-              <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+              <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-[#6B6862]">
                 {group.group}
               </div>
               {group.items.map((item) => {
@@ -149,31 +143,35 @@ export function Sidebar({
                   <button
                     key={item.id}
                     onClick={() => setActiveTab(item.id)}
-                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                    className={`w-full flex items-center justify-between px-3.5 py-2 rounded-full text-xs font-medium transition-all ${
                       isActive
-                        ? "bg-sky-500/15 text-sky-300 border border-sky-500/30 font-semibold shadow-sm"
-                        : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 border border-transparent"
+                        ? "bg-[#141413] text-[#FFF9EC] shadow-sm"
+                        : "text-[#6B6862] hover:text-[#141413] hover:bg-[#F0EAE0]"
                     }`}
                   >
                     <div className="flex items-center gap-2.5">
-                      <Icon className={`h-4 w-4 ${isActive ? "text-sky-400" : "text-slate-400"}`} />
+                      <Icon className={`h-4 w-4 ${isActive ? "text-[#FFF9EC]" : "text-[#6B6862]"}`} />
                       <span>{item.label}</span>
                     </div>
 
                     {item.badge && (
-                      <span className="rounded bg-indigo-500/20 px-1.5 py-0.5 text-[9px] font-semibold text-indigo-300 border border-indigo-500/40">
+                      <span className={`rounded-full px-2 py-0.5 text-[9px] font-semibold ${
+                        isActive
+                          ? "bg-white/20 text-white"
+                          : "bg-[#F0EAE0] text-[#6B6862] border border-[#E3DDD2]"
+                      }`}>
                         {item.badge}
                       </span>
                     )}
 
                     {item.badgeCount !== undefined && (
-                      <span className="rounded-full bg-amber-500 px-1.5 py-0.2 text-[10px] font-bold text-slate-950 animate-pulse">
+                      <span className="rounded-full bg-[#D97706] px-2 py-0.5 text-[10px] font-bold text-white">
                         {item.badgeCount}
                       </span>
                     )}
 
                     {item.alertCount !== undefined && (
-                      <span className="rounded-full bg-rose-500 px-1.5 py-0.2 text-[10px] font-bold text-white">
+                      <span className="rounded-full bg-[#EB001B] px-2 py-0.5 text-[10px] font-bold text-white">
                         {item.alertCount}
                       </span>
                     )}
@@ -186,14 +184,14 @@ export function Sidebar({
       </div>
 
       {/* Footer / Razorpay Test Mode Indicator */}
-      <div className="p-4 border-t border-slate-800/80 bg-slate-950/40">
-        <div className="flex items-center justify-between text-[11px] text-slate-400 mb-2">
+      <div className="p-4 border-t border-[#E3DDD2] bg-[#F5EFE2]">
+        <div className="flex items-center justify-between text-[11px] text-[#6B6862] mb-1.5">
           <span>Gateway Mode:</span>
-          <span className="font-mono text-xs font-bold text-sky-400 flex items-center gap-1">
-            <span className="h-1.5 w-1.5 rounded-full bg-sky-400"></span> Razorpay Test
+          <span className="font-mono text-xs font-semibold text-[#141413] flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#1E824C]"></span> Razorpay Test
           </span>
         </div>
-        <div className="text-[10px] text-slate-500 truncate font-mono">
+        <div className="text-[10px] text-[#6B6862] truncate font-mono">
           Merchant: ElectroGear Pro (INR)
         </div>
       </div>

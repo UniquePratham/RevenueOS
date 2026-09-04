@@ -50,16 +50,16 @@ export function AuditTab({ auditTrail = [] }: AuditTabProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E3DDD2] pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-xl font-bold text-white font-mono flex items-center gap-2">
-              <FileText className="h-5 w-5 text-sky-400" />
+            <h2 className="text-xl font-bold text-[#141413] flex items-center gap-2">
+              <FileText className="h-5 w-5 text-[#141413]" />
               Autonomous Audit Trail & "Why?" Engine
             </h2>
-            <Badge variant="cyan">Append-Only Ledger</Badge>
+            <Badge variant="default">Append-Only Ledger</Badge>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-[#6B6862] mt-1">
             Every autonomous event, policy evaluation, risk decision, and financial movement is immutably logged with 1-click explainability.
           </p>
         </div>
@@ -75,24 +75,24 @@ export function AuditTab({ auditTrail = [] }: AuditTabProps) {
         {/* Table (2 cols) */}
         <div className="lg:col-span-2 space-y-4">
           <Card>
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <h3 className="font-semibold text-white text-sm">Real-Time Autonomous Event Stream</h3>
-              <span className="text-xs text-slate-400">Click any row for "Why?" explanation</span>
+            <div className="flex items-center justify-between pb-3 border-b border-[#E3DDD2]">
+              <h3 className="font-semibold text-[#141413] text-sm">Real-Time Autonomous Event Stream</h3>
+              <span className="text-xs text-[#6B6862]">Click any row for "Why?" explanation</span>
             </div>
 
             <div className="overflow-x-auto mt-3">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="border-b border-slate-800 text-slate-400 font-mono text-[10px] uppercase">
-                    <th className="pb-2">Time</th>
-                    <th className="pb-2">Agent</th>
-                    <th className="pb-2">Event Type</th>
-                    <th className="pb-2">Decision</th>
-                    <th className="pb-2">Impact</th>
-                    <th className="pb-2 text-right">Explain</th>
+                  <tr className="border-b border-[#E3DDD2] text-[#6B6862] font-mono text-[10px] uppercase">
+                    <th className="pb-2.5">Time</th>
+                    <th className="pb-2.5">Agent</th>
+                    <th className="pb-2.5">Event Type</th>
+                    <th className="pb-2.5">Decision</th>
+                    <th className="pb-2.5">Impact</th>
+                    <th className="pb-2.5 text-right">Explain</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60">
+                <tbody className="divide-y divide-[#E3DDD2]">
                   {auditTrail.map((item, idx) => {
                     const isSelected = selectedAudit?.id === item.id;
                     const isBlocked = item.decision === "BLOCKED" || item.decision === "BLOCK";
@@ -103,30 +103,30 @@ export function AuditTab({ auditTrail = [] }: AuditTabProps) {
                         key={item.id || idx}
                         onClick={() => handleInspectWhy(item)}
                         className={`cursor-pointer transition-colors ${
-                          isSelected ? "bg-sky-950/30" : "hover:bg-slate-900/50"
+                          isSelected ? "bg-[#F0EAE0]" : "hover:bg-[#F5EFE2]"
                         }`}
                       >
-                        <td className="py-2.5 font-mono text-slate-400 text-[11px]">
+                        <td className="py-3 font-mono text-[#6B6862] text-[11px]">
                           {(item.timestamp || "21:14:00").slice(11, 19)}
                         </td>
-                        <td className="py-2.5 font-medium text-slate-200">
+                        <td className="py-3 font-semibold text-[#141413]">
                           {item.agent || "Policy Engine"}
                         </td>
-                        <td className="py-2.5 font-mono text-slate-300 text-[11px] truncate max-w-[140px]">
+                        <td className="py-3 font-mono text-[#141413] text-[11px] truncate max-w-[140px]">
                           {item.event_type}
                         </td>
-                        <td className="py-2.5">
+                        <td className="py-3">
                           <Badge variant={isBlocked ? "danger" : isApproved ? "success" : "warning"}>
                             {item.decision}
                           </Badge>
                         </td>
-                        <td className="py-2.5 font-mono text-slate-300">
+                        <td className="py-3 font-mono text-[#141413]">
                           {item.financial_impact_inr
                             ? `₹${item.financial_impact_inr.toLocaleString("en-IN")}`
                             : "—"}
                         </td>
-                        <td className="py-2.5 text-right">
-                          <button className="text-sky-400 hover:text-sky-300 font-medium text-[11px] flex items-center gap-1 ml-auto">
+                        <td className="py-3 text-right">
+                          <button className="text-[#141413] hover:text-[#EB001B] font-semibold text-[11px] flex items-center gap-1 ml-auto">
                             <span>Why?</span>
                             <ArrowRight className="h-3 w-3" />
                           </button>
@@ -142,45 +142,45 @@ export function AuditTab({ auditTrail = [] }: AuditTabProps) {
 
         {/* Right Col: "Why?" Explainer Inspector */}
         <div>
-          <Card highlight>
-            <div className="pb-3 border-b border-slate-800 flex items-center justify-between">
-              <h3 className="font-semibold text-white text-sm flex items-center gap-2">
-                <HelpCircle className="h-4 w-4 text-sky-400" />
+          <Card>
+            <div className="pb-3 border-b border-[#E3DDD2] flex items-center justify-between">
+              <h3 className="font-semibold text-[#141413] text-sm flex items-center gap-2">
+                <HelpCircle className="h-4 w-4 text-[#141413]" />
                 "Why?" Explanation Inspector
               </h3>
-              <Badge variant="cyan">Explainable AI</Badge>
+              <Badge variant="default">Explainable AI</Badge>
             </div>
 
             {selectedAudit ? (
               <div className="mt-4 space-y-4 text-xs">
-                <div className="rounded-lg bg-slate-900/80 p-3 border border-slate-800 space-y-1.5">
+                <div className="rounded-xl bg-[#F5EFE2] p-3.5 border border-[#E3DDD2] space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-slate-400 text-[10px]">
+                    <span className="font-mono text-[#6B6862] text-[10px]">
                       {selectedAudit.id || "audit_evt_01"}
                     </span>
                     <Badge variant={selectedAudit.decision === "BLOCKED" ? "danger" : "success"}>
                       {selectedAudit.decision}
                     </Badge>
                   </div>
-                  <div className="font-bold text-sm text-white">{selectedAudit.event_type}</div>
-                  <div className="text-[11px] text-slate-400">
-                    Executing Agent: <span className="text-sky-300">{selectedAudit.agent}</span>
+                  <div className="font-bold text-sm text-[#141413]">{selectedAudit.event_type}</div>
+                  <div className="text-[11px] text-[#6B6862]">
+                    Executing Agent: <span className="text-[#141413] font-semibold">{selectedAudit.agent}</span>
                   </div>
                 </div>
 
                 {/* Why Breakdown */}
-                <div className="rounded-lg bg-sky-950/20 border border-sky-800/40 p-3.5 space-y-2">
-                  <h4 className="font-bold text-sky-300 text-xs flex items-center gap-1.5">
-                    <ShieldCheck className="h-4 w-4 text-sky-400" />
+                <div className="rounded-xl bg-[#F0EAE0] border border-[#E3DDD2] p-4 space-y-2">
+                  <h4 className="font-bold text-[#141413] text-xs flex items-center gap-1.5">
+                    <ShieldCheck className="h-4 w-4 text-[#1E824C]" />
                     Autonomous Decision Rationale
                   </h4>
-                  <p className="text-xs text-slate-200 leading-relaxed">
+                  <p className="text-xs text-[#141413] leading-relaxed">
                     {selectedAudit.why_breakdown?.summary ||
                       selectedAudit.reason ||
                       "Decision was made autonomously following verified merchant configuration and risk scoring model."}
                   </p>
 
-                  <div className="pt-2 border-t border-sky-800/30 space-y-1.5">
+                  <div className="pt-2 border-t border-[#E3DDD2] space-y-1.5">
                     {(
                       selectedAudit.why_breakdown?.bullet_points || [
                         `Policy evaluated: ${selectedAudit.policy_checked || "Bounded Autonomy Threshold"}`,
@@ -188,8 +188,8 @@ export function AuditTab({ auditTrail = [] }: AuditTabProps) {
                         `Approval route: ${selectedAudit.approval_status || "AUTOMATIC"}`,
                       ]
                     ).map((pt: string, idx: number) => (
-                      <div key={idx} className="flex items-start gap-1.5 text-slate-300 text-[11px]">
-                        <span className="h-1.5 w-1.5 rounded-full bg-sky-400 mt-1 shrink-0" />
+                      <div key={idx} className="flex items-start gap-2 text-[#6B6862] text-[11px]">
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#EB001B] mt-1 shrink-0" />
                         <span>{pt}</span>
                       </div>
                     ))}
@@ -199,17 +199,17 @@ export function AuditTab({ auditTrail = [] }: AuditTabProps) {
                 {/* Input Payload Preview */}
                 {selectedAudit.input && (
                   <div>
-                    <h4 className="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1">
+                    <h4 className="text-[10px] uppercase font-bold text-[#6B6862] tracking-wider mb-1">
                       Event Input Telemetry
                     </h4>
-                    <pre className="rounded bg-slate-900/90 p-2.5 text-[10px] font-mono text-slate-300 overflow-x-auto border border-slate-800">
+                    <pre className="rounded-xl bg-[#FFF9EC] p-3 text-[10px] font-mono text-[#141413] overflow-x-auto border border-[#E3DDD2]">
                       {JSON.stringify(selectedAudit.input, null, 2)}
                     </pre>
                   </div>
                 )}
               </div>
             ) : (
-              <div className="p-8 text-center text-xs text-slate-400">
+              <div className="p-8 text-center text-xs text-[#6B6862]">
                 Select an audit entry from the table to inspect its rationale.
               </div>
             )}

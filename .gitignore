@@ -12,6 +12,8 @@ coverage/
 out/
 build/
 dist/
+.vercel/
+.turbo/
 
 # Production
 *.tsbuildinfo

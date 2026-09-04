@@ -36,16 +36,16 @@ export function EvaluationTab({ evaluation = {} }: EvaluationTabProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E3DDD2] pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-xl font-bold text-white font-mono flex items-center gap-2">
-              <Activity className="h-5 w-5 text-sky-400" />
+            <h2 className="text-xl font-bold text-[#141413] tracking-tight flex items-center gap-2">
+              <Activity className="h-5 w-5 text-[#141413]" />
               Machine Learning Model Evaluation & Economic Audit
             </h2>
             <Badge variant="cyan">Rigorous Benchmark</Badge>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-[#6B6862] mt-1">
             Quantitative evaluation of Defensive Risk Engine against gold-standard labeled synthetic fraud vectors and false-positive business friction costs.
           </p>
         </div>
@@ -94,52 +94,52 @@ export function EvaluationTab({ evaluation = {} }: EvaluationTabProps) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Confusion Matrix */}
         <Card highlight>
-          <div className="pb-3 border-b border-slate-800 flex items-center justify-between">
-            <h3 className="font-semibold text-white text-sm">2×2 Confusion Matrix</h3>
-            <span className="text-xs font-mono text-slate-400">N = 1,002 Evaluated In-Flight</span>
+          <div className="pb-3 border-b border-[#E3DDD2] flex items-center justify-between">
+            <h3 className="font-semibold text-[#141413] text-sm">2×2 Confusion Matrix</h3>
+            <span className="text-xs font-mono text-[#6B6862]">N = 1,002 Evaluated In-Flight</span>
           </div>
 
           <div className="mt-4 grid grid-cols-2 gap-3 text-center">
             {/* TP */}
-            <div className="rounded-xl border border-emerald-800/80 bg-emerald-950/20 p-4 space-y-1">
-              <span className="text-[10px] uppercase font-bold text-emerald-400 tracking-wider">
+            <div className="rounded-2xl border border-[#1E824C]/25 bg-[#1E824C]/5 p-4 space-y-1">
+              <span className="text-[10px] uppercase font-bold text-[#1E824C] tracking-wider">
                 True Positive (TP)
               </span>
-              <div className="text-2xl font-bold font-mono text-white">{cm.true_positives}</div>
-              <p className="text-[11px] text-slate-400">
+              <div className="text-2xl font-bold font-mono text-[#141413]">{cm.true_positives}</div>
+              <p className="text-[11px] text-[#6B6862]">
                 Correctly blocked card-testing & botnets
               </p>
             </div>
 
             {/* FP */}
-            <div className="rounded-xl border border-amber-800/80 bg-amber-950/20 p-4 space-y-1">
-              <span className="text-[10px] uppercase font-bold text-amber-400 tracking-wider">
+            <div className="rounded-2xl border border-[#D97706]/25 bg-[#D97706]/5 p-4 space-y-1">
+              <span className="text-[10px] uppercase font-bold text-[#D97706] tracking-wider">
                 False Positive (FP)
               </span>
-              <div className="text-2xl font-bold font-mono text-white">{cm.false_positives}</div>
-              <p className="text-[11px] text-slate-400">
+              <div className="text-2xl font-bold font-mono text-[#141413]">{cm.false_positives}</div>
+              <p className="text-[11px] text-[#6B6862]">
                 Legitimate buyers flagged for review
               </p>
             </div>
 
             {/* FN */}
-            <div className="rounded-xl border border-rose-800/80 bg-rose-950/20 p-4 space-y-1">
-              <span className="text-[10px] uppercase font-bold text-rose-400 tracking-wider">
+            <div className="rounded-2xl border border-[#EB001B]/25 bg-[#EB001B]/5 p-4 space-y-1">
+              <span className="text-[10px] uppercase font-bold text-[#EB001B] tracking-wider">
                 False Negative (FN)
               </span>
-              <div className="text-2xl font-bold font-mono text-white">{cm.false_negatives}</div>
-              <p className="text-[11px] text-slate-400">
+              <div className="text-2xl font-bold font-mono text-[#141413]">{cm.false_negatives}</div>
+              <p className="text-[11px] text-[#6B6862]">
                 Missed fraud transactions (chargeback risk)
               </p>
             </div>
 
             {/* TN */}
-            <div className="rounded-xl border border-slate-700 bg-slate-900/60 p-4 space-y-1">
-              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+            <div className="rounded-2xl border border-[#E3DDD2] bg-[#F5EFE2] p-4 space-y-1">
+              <span className="text-[10px] uppercase font-bold text-[#6B6862] tracking-wider">
                 True Negative (TN)
               </span>
-              <div className="text-2xl font-bold font-mono text-white">{cm.true_negatives}</div>
-              <p className="text-[11px] text-slate-400">
+              <div className="text-2xl font-bold font-mono text-[#141413]">{cm.true_negatives}</div>
+              <p className="text-[11px] text-[#6B6862]">
                 Frictionless approvals for clean buyers
               </p>
             </div>
@@ -148,48 +148,48 @@ export function EvaluationTab({ evaluation = {} }: EvaluationTabProps) {
 
         {/* Economic Impact Card */}
         <Card>
-          <div className="pb-3 border-b border-slate-800 flex items-center justify-between">
-            <h3 className="font-semibold text-white text-sm">Economic Utility Accounting</h3>
+          <div className="pb-3 border-b border-[#E3DDD2] flex items-center justify-between">
+            <h3 className="font-semibold text-[#141413] text-sm">Economic Utility Accounting</h3>
             <Badge variant="success">Merchant Net Gain</Badge>
           </div>
 
           <div className="mt-4 space-y-3">
-            <div className="rounded-lg bg-emerald-950/20 border border-emerald-900/40 p-3.5 flex items-center justify-between">
+            <div className="rounded-2xl bg-[#F5EFE2] border border-[#E3DDD2] p-3.5 flex items-center justify-between">
               <div>
-                <div className="text-xs font-semibold text-emerald-300">
+                <div className="text-xs font-semibold text-[#141413]">
                   Gross Fraud Loss Prevented
                 </div>
-                <div className="text-[11px] text-slate-400">
+                <div className="text-[11px] text-[#6B6862]">
                   Chargeback fines, gateway penalties & lost inventory
                 </div>
               </div>
-              <div className="font-mono text-base font-bold text-emerald-400">
+              <div className="font-mono text-base font-bold text-[#1E824C]">
                 +{formatInr(economicImpact.fraud_prevented_inr)}
               </div>
             </div>
 
-            <div className="rounded-lg bg-amber-950/20 border border-amber-900/40 p-3.5 flex items-center justify-between">
+            <div className="rounded-2xl bg-[#F5EFE2] border border-[#E3DDD2] p-3.5 flex items-center justify-between">
               <div>
-                <div className="text-xs font-semibold text-amber-300">
+                <div className="text-xs font-semibold text-[#141413]">
                   False Positive Friction Cost
                 </div>
-                <div className="text-[11px] text-slate-400">
+                <div className="text-[11px] text-[#6B6862]">
                   Estimated margin lost from delayed or reviewed clean buyers
                 </div>
               </div>
-              <div className="font-mono text-base font-bold text-amber-400">
+              <div className="font-mono text-base font-bold text-[#EB001B]">
                 -{formatInr(economicImpact.false_positive_friction_cost_inr)}
               </div>
             </div>
 
-            <div className="rounded-lg bg-sky-950/30 border border-sky-800/60 p-4 flex items-center justify-between">
+            <div className="rounded-2xl bg-[#141413] border border-[#141413] p-4 flex items-center justify-between text-[#FFF9EC]">
               <div>
-                <div className="text-sm font-bold text-white">Net Economic Benefit</div>
-                <div className="text-xs text-sky-300">
+                <div className="text-sm font-bold text-[#FFF9EC]">Net Economic Benefit</div>
+                <div className="text-xs text-[#E3DDD2]">
                   Measured incremental profit delivered to merchant bottom line
                 </div>
               </div>
-              <div className="font-mono text-xl font-bold text-sky-400">
+              <div className="font-mono text-xl font-bold text-[#FFF9EC]">
                 +{formatInr(economicImpact.net_economic_benefit_inr)}
               </div>
             </div>

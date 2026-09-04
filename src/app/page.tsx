@@ -69,8 +69,8 @@ export default function Home() {
   const anomalyCount = (data?.anomalies || []).length;
 
   return (
-    <div className="flex min-h-screen bg-fintech-navy text-slate-100 selection:bg-sky-500 selection:text-slate-950 font-sans">
-      {/* Bloomberg-style Left Sidebar */}
+    <div className="flex min-h-screen bg-[#F5EFE2] text-[#141413] selection:bg-[#EB001B] selection:text-white font-sans">
+      {/* Sidebar */}
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -79,7 +79,7 @@ export default function Home() {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 bg-fintech-dark/40 bg-grid-pattern">
+      <div className="flex-1 flex flex-col min-w-0 bg-[#F5EFE2]">
         {/* Real-time Topbar */}
         <Topbar
           onRefresh={fetchData}
@@ -94,8 +94,8 @@ export default function Home() {
         <main className="flex-1 p-6 lg:p-8 max-w-7xl w-full mx-auto overflow-y-auto">
           {isLoading && !data ? (
             <div className="flex flex-col items-center justify-center h-96 space-y-3">
-              <div className="h-8 w-8 rounded-full border-2 border-sky-500 border-t-transparent animate-spin" />
-              <p className="text-xs font-mono text-slate-400">
+              <div className="h-8 w-8 rounded-full border-2 border-[#EB001B] border-t-transparent animate-spin" />
+              <p className="text-xs font-mono text-[#6B6862]">
                 Hydrating Digital Revenue Twin from deterministic seed...
               </p>
             </div>

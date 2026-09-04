@@ -3,48 +3,36 @@
 @tailwind utilities;
 
 :root {
-  --background: 222 47% 6%;
-  --foreground: 210 40% 98%;
-  --card: 222 47% 9%;
-  --card-foreground: 210 40% 98%;
-  --primary: 199 89% 48%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 217 33% 17%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20% 65%;
-  --accent: 217 33% 20%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217 33% 18%;
-  --input: 217 33% 18%;
-  --ring: 199 89% 48%;
-}
+  --background: #F5EFE2;
+  --foreground: #141413;
+  --card: #FFF9EC;
+  --card-foreground: #141413;
+  --primary: #141413;
+  --primary-foreground: #FFF9EC;
+  --secondary: #F0EAE0;
+  --secondary-foreground: #141413;
+  --muted: #EAE4D9;
+  --muted-foreground: #6B6862;
+  --accent: #EB001B;
+  --accent-foreground: #FFF9EC;
+  --destructive: #EB001B;
+  --destructive-foreground: #FFF9EC;
+  --border: #E3DDD2;
+  --input: #E3DDD2;
+  --ring: #EB001B;
 
-.light {
-  --background: 210 40% 98%;
-  --foreground: 222 47% 11%;
-  --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
-  --primary: 199 89% 48%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96%;
-  --secondary-foreground: 222 47% 11%;
-  --muted: 210 40% 96%;
-  --muted-foreground: 215 16% 47%;
-  --accent: 210 40% 94%;
-  --accent-foreground: 222 47% 11%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 214 32% 91%;
-  --input: 214 32% 91%;
-  --ring: 199 89% 48%;
+  /* Mastercard Tokens */
+  --mc-primary: #141413;
+  --mc-secondary: #6B6862;
+  --mc-tertiary: #EB001B;
+  --mc-neutral: #F5EFE2;
+  --mc-surface: #FFF9EC;
+  --mc-on-primary: #FFF9EC;
 }
 
 body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
+  background-color: var(--mc-neutral);
+  color: var(--mc-primary);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   overflow-x: hidden;
@@ -54,12 +42,11 @@ code, kbd, samp, pre, .font-mono {
   font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-/* Glassmorphism primitives */
+/* Mastercard flat card surface */
 .glass-panel {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #FFF9EC;
+  border: 1px solid #E3DDD2;
+  box-shadow: 0 1px 3px rgba(20, 20, 19, 0.04);
 }
 
 .glass-panel-hover {
@@ -67,34 +54,32 @@ code, kbd, samp, pre, .font-mono {
 }
 
 .glass-panel-hover:hover {
-  border-color: rgba(56, 189, 248, 0.3);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(56, 189, 248, 0.1);
+  border-color: #D4CCC0;
+  box-shadow: 0 4px 16px rgba(20, 20, 19, 0.06);
   transform: translateY(-1px);
 }
 
-/* Subtle fintech grid pattern */
+/* Subtle clean surface texture */
 .bg-grid-pattern {
-  background-size: 32px 32px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-color: #F5EFE2;
 }
 
-/* Custom smooth scrollbar */
+/* Custom smooth scrollbar in warm neutral tones */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.6);
+  background: #F5EFE2;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.25);
+  background: #D8D2C5;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.45);
+  background: #BAB4A8;
 }
+

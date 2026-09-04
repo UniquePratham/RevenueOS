@@ -53,30 +53,30 @@ export function ForecastTab({ forecast }: ForecastTabProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E3DDD2] pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-xl font-bold text-white font-mono flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-sky-400" />
+            <h2 className="text-xl font-bold text-[#141413] flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-[#141413]" />
               Cash Flow Forecast & Settlement Liquidity Model
             </h2>
-            <Badge variant="cyan">Monte Carlo Bands</Badge>
+            <Badge variant="default">Monte Carlo Bands</Badge>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-[#6B6862] mt-1">
             Dynamic 30-day projection modeling Razorpay T+2 payout cycles, gateway fees, predicted returns, and autonomous recovery yields.
           </p>
         </div>
 
         {/* Horizon selector */}
-        <div className="flex items-center gap-1.5 bg-slate-900/80 p-1 rounded-lg border border-slate-800 text-xs">
+        <div className="flex items-center gap-1 bg-[#F5EFE2] p-1 rounded-full border border-[#E3DDD2] text-xs">
           {[7, 14, 30].map((days) => (
             <button
               key={days}
               onClick={() => setHorizon(days)}
-              className={`px-3 py-1 rounded text-xs font-medium transition-all ${
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
                 horizon === days
-                  ? "bg-sky-500 text-slate-950 font-bold"
-                  : "text-slate-400 hover:text-slate-200"
+                  ? "bg-[#141413] text-[#FFF9EC]"
+                  : "text-[#6B6862] hover:text-[#141413]"
               }`}
             >
               {days} Days
@@ -107,7 +107,7 @@ export function ForecastTab({ forecast }: ForecastTabProps) {
           title="Conservative P10 Floor"
           value={formatInr(currentP10)}
           trend="neutral"
-          change="Worst-case buffer"
+          change="Buffer Floor"
           subtitle="Elevated UPI timeouts & returns"
           pill="P10 Floor"
         />
@@ -122,20 +122,20 @@ export function ForecastTab({ forecast }: ForecastTabProps) {
       </div>
 
       {/* Main Chart */}
-      <Card highlight>
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+      <Card>
+        <div className="flex items-center justify-between pb-3 border-b border-[#E3DDD2]">
           <div>
-            <h3 className="font-semibold text-white text-sm">Settled Cash Projection & Confidence Envelopes</h3>
-            <p className="text-xs text-slate-400">
+            <h3 className="font-semibold text-[#141413] text-sm">Settled Cash Projection & Confidence Envelopes</h3>
+            <p className="text-xs text-[#6B6862]">
               Shaded interval captures 90% confidence variance across settlement timelines
             </p>
           </div>
           <div className="flex items-center gap-3 text-xs font-mono">
-            <span className="flex items-center gap-1 text-sky-400">
-              <span className="h-2 w-2 rounded-full bg-sky-400" /> Projected
+            <span className="flex items-center gap-1 text-[#141413] font-semibold">
+              <span className="h-2 w-2 rounded-full bg-[#141413]" /> Projected
             </span>
-            <span className="flex items-center gap-1 text-sky-600">
-              <span className="h-2 w-2 rounded-full border border-sky-600 border-dashed" /> Confidence Bounds
+            <span className="flex items-center gap-1 text-[#6B6862]">
+              <span className="h-2 w-2 rounded-full border border-[#6B6862] border-dashed" /> Confidence Bounds
             </span>
           </div>
         </div>
@@ -146,35 +146,37 @@ export function ForecastTab({ forecast }: ForecastTabProps) {
               <AreaChart data={displayData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorCash" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#38bdf8" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#38bdf8" stopOpacity={0.0} />
+                    <stop offset="5%" stopColor="#141413" stopOpacity={0.12} />
+                    <stop offset="95%" stopColor="#141413" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E3DDD2" />
                 <XAxis
                   dataKey="date"
-                  stroke="#64748b"
+                  stroke="#6B6862"
                   fontSize={11}
                   tickFormatter={(s) => (typeof s === "string" && s.length >= 5 ? s.slice(5) : String(s || ""))}
                 />
                 <YAxis
-                  stroke="#64748b"
+                  stroke="#6B6862"
                   fontSize={11}
                   tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`}
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "#0f172a",
-                    borderColor: "#334155",
-                    borderRadius: "8px",
+                    backgroundColor: "#FFF9EC",
+                    borderColor: "#E3DDD2",
+                    borderRadius: "12px",
+                    color: "#141413",
                     fontSize: "12px",
+                    boxShadow: "0 4px 12px rgba(20, 20, 19, 0.08)",
                   }}
                   formatter={(value: any, name: any) => [`₹${Number(value).toLocaleString("en-IN")}`, name]}
                 />
                 <Area
                   type="monotone"
                   dataKey="p90_cash_inr"
-                  stroke="#0284c7"
+                  stroke="#6B6862"
                   strokeDasharray="4 4"
                   fill="none"
                   name="Optimistic (P90)"
@@ -182,7 +184,7 @@ export function ForecastTab({ forecast }: ForecastTabProps) {
                 <Area
                   type="monotone"
                   dataKey="projected_cash_inr"
-                  stroke="#38bdf8"
+                  stroke="#141413"
                   strokeWidth={2.5}
                   fillOpacity={1}
                   fill="url(#colorCash)"
@@ -191,7 +193,7 @@ export function ForecastTab({ forecast }: ForecastTabProps) {
                 <Area
                   type="monotone"
                   dataKey="p10_cash_inr"
-                  stroke="#0284c7"
+                  stroke="#6B6862"
                   strokeDasharray="4 4"
                   fill="none"
                   name="Conservative (P10)"
@@ -199,7 +201,7 @@ export function ForecastTab({ forecast }: ForecastTabProps) {
               </AreaChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-full w-full flex items-center justify-center text-xs text-slate-500 font-mono">
+            <div className="h-full w-full flex items-center justify-center text-xs text-[#6B6862] font-mono">
               Loading financial projections...
             </div>
           )}
@@ -208,14 +210,14 @@ export function ForecastTab({ forecast }: ForecastTabProps) {
 
       {/* Daily Liquidity Schedule & Drivers Table */}
       <Card>
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div className="flex items-center justify-between pb-3 border-b border-[#E3DDD2]">
           <div>
-            <h3 className="font-semibold text-white text-sm">Settlement Trajectory & Event Drivers</h3>
-            <p className="text-xs text-slate-400">
+            <h3 className="font-semibold text-[#141413] text-sm">Settlement Trajectory & Event Drivers</h3>
+            <p className="text-xs text-[#6B6862]">
               Upcoming liquidity milestones, scheduled merchant sweeps, and gateway clearance expectations
             </p>
           </div>
-          <span className="text-xs font-mono text-slate-400">
+          <span className="text-xs font-mono text-[#6B6862]">
             Next {Math.min(displayData.length, 7)} Days Scheduled
           </span>
         </div>
@@ -223,28 +225,28 @@ export function ForecastTab({ forecast }: ForecastTabProps) {
         <div className="overflow-x-auto mt-3">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="border-b border-slate-800 text-slate-400 font-mono text-[10px] uppercase">
-                <th className="pb-2">Date / Day</th>
-                <th className="pb-2">Expected Inflow</th>
-                <th className="pb-2">Fees & Outflow</th>
-                <th className="pb-2">Net Cash</th>
-                <th className="pb-2">Confidence</th>
-                <th className="pb-2">Key Drivers</th>
+              <tr className="border-b border-[#E3DDD2] text-[#6B6862] font-mono text-[10px] uppercase">
+                <th className="pb-2.5">Date / Day</th>
+                <th className="pb-2.5">Expected Inflow</th>
+                <th className="pb-2.5">Fees & Outflow</th>
+                <th className="pb-2.5">Net Cash</th>
+                <th className="pb-2.5">Confidence</th>
+                <th className="pb-2.5">Key Drivers</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 font-mono">
+            <tbody className="divide-y divide-[#E3DDD2] font-mono">
               {displayData.slice(0, 7).map((day: any, idx: number) => (
-                <tr key={day.date || idx} className="hover:bg-slate-900/50 transition-colors">
-                  <td className="py-2.5 text-slate-300 font-semibold">{day.date}</td>
-                  <td className="py-2.5 text-emerald-400 font-semibold">{formatInr(day.inflow)}</td>
-                  <td className="py-2.5 text-slate-400">-{formatInr(day.outflow)}</td>
-                  <td className="py-2.5 text-white font-bold">{formatInr(day.projected_cash_inr)}</td>
-                  <td className="py-2.5">
-                    <span className="text-sky-400">
+                <tr key={day.date || idx} className="hover:bg-[#F5EFE2] transition-colors">
+                  <td className="py-3 text-[#141413] font-semibold">{day.date}</td>
+                  <td className="py-3 text-[#1E824C] font-semibold">{formatInr(day.inflow)}</td>
+                  <td className="py-3 text-[#6B6862]">-{formatInr(day.outflow)}</td>
+                  <td className="py-3 text-[#141413] font-bold">{formatInr(day.projected_cash_inr)}</td>
+                  <td className="py-3">
+                    <span className="text-[#141413] font-semibold">
                       {Math.round((day.confidence_score ?? 0.9) * 100)}%
                     </span>
                   </td>
-                  <td className="py-2.5 text-slate-300 font-sans text-xs">
+                  <td className="py-3 text-[#6B6862] font-sans text-xs">
                     {day.drivers?.length > 0 ? day.drivers.join("; ") : "Baseline run-rate order transactions"}
                   </td>
                 </tr>

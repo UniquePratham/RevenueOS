@@ -210,6 +210,7 @@ export interface RevenueOpportunity {
 
 export type ApprovalType = 
   | 'REFUND' 
+  | 'DISCOUNT'
   | 'HIGH_RISK_TRANSACTION' 
   | 'BUDGET_INCREASE' 
   | 'RECOVERY_OFFER' 

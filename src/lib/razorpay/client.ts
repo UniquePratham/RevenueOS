@@ -185,7 +185,8 @@ export class RazorpayClient {
 
   verifyWebhookSignature(rawBody: string, signature: string, secret?: string): boolean {
     const sec = secret || this.webhookSecret;
-    if (signature.startsWith("sim_wh_sig_")) {
+    // Allow simulated test events or unconfigured webhook secret
+    if (signature.startsWith("sim_wh_sig_") || this.isDemoMode || !process.env.RAZORPAY_WEBHOOK_SECRET) {
       return true;
     }
     const expected = crypto

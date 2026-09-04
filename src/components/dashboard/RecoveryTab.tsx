@@ -12,6 +12,15 @@ export function RecoveryTab({ recoveries = [], onRefresh }: RecoveryTabProps) {
   const [executionResult, setExecutionResult] = useState<any>(null);
   const [selectedCandidate, setSelectedCandidate] = useState<any>(recoveries[0] || null);
 
+  React.useEffect(() => {
+    if (!selectedCandidate && recoveries.length > 0) {
+      setSelectedCandidate(recoveries[0]);
+    } else if (selectedCandidate && recoveries.length > 0) {
+      const updated = recoveries.find((r: any) => r.id === selectedCandidate.id);
+      if (updated) setSelectedCandidate(updated);
+    }
+  }, [recoveries]);
+
   const formatInr = (v: number) => `₹${(v || 0).toLocaleString("en-IN")}`;
 
   const handleExecuteRecovery = async (candidateId: string) => {
@@ -21,10 +30,15 @@ export function RecoveryTab({ recoveries = [], onRefresh }: RecoveryTabProps) {
       const res = await fetch("/api/recovery/execute", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ recovery_id: candidateId }),
+        body: JSON.stringify({ candidate_id: candidateId, recovery_id: candidateId }),
       });
       const data = await res.json();
       setExecutionResult(data);
+      if (data.current_status && selectedCandidate?.id === candidateId) {
+        setSelectedCandidate((prev: any) =>
+          prev ? { ...prev, status: data.current_status, attempts: (prev.attempts || 0) + 1 } : prev
+        );
+      }
       onRefresh();
     } catch (e: any) {
       setExecutionResult({ error: e.message });
@@ -292,12 +306,41 @@ export function RecoveryTab({ recoveries = [], onRefresh }: RecoveryTabProps) {
                   )}
 
                 {executionResult && (
-                  <div className="rounded-xl border border-[#C3E6D0] bg-[#EBF5EF] p-3 text-xs text-[#1E824C] space-y-1">
-                    <div className="font-bold flex items-center justify-between">
-                      <span>Status: {executionResult.status}</span>
-                      <span className="font-mono text-[10px]">{executionResult.channel}</span>
-                    </div>
-                    <p className="text-[11px]">{executionResult.message}</p>
+                  <div
+                    className={`rounded-xl border p-3 text-xs space-y-1.5 ${
+                      executionResult.error
+                        ? "border-[#F3C7C9] bg-[#FBEAEB] text-[#EB001B]"
+                        : "border-[#C3E6D0] bg-[#EBF5EF] text-[#1E824C]"
+                    }`}
+                  >
+                    {executionResult.error ? (
+                      <div>
+                        <span className="font-bold">Error: </span>
+                        <span>{executionResult.error}</span>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="font-bold flex items-center justify-between">
+                          <span>
+                            Status: {executionResult.current_status || executionResult.status || "EXECUTED"}
+                          </span>
+                          <span className="font-mono text-[10px]">
+                            {executionResult.action_executed || executionResult.channel || "LADDER STEP"}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-[#141413]">{executionResult.message}</p>
+                        {executionResult.payment_link_url && (
+                          <a
+                            href={executionResult.payment_link_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-[11px] underline font-semibold text-[#1E824C] hover:text-[#141413] block pt-1"
+                          >
+                            Open Generated Razorpay Link →
+                          </a>
+                        )}
+                      </>
+                    )}
                   </div>
                 )}
               </div>

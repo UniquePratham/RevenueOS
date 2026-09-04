@@ -39,7 +39,7 @@ export function RiskTab({ riskEvents = [], anomalies = [], onRefresh }: RiskTabP
         </div>
 
         <div className="flex items-center gap-2">
-          <Badge variant="neutral">DefensiveRiskEngine v3.2</Badge>
+          <Badge variant="neutral">Defensive Risk Engine</Badge>
           <Badge variant="success">Precision: 92.4%</Badge>
         </div>
       </div>

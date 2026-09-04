@@ -86,20 +86,26 @@ export function RiskTab({ riskEvents = [], anomalies = [], onRefresh }: RiskTabP
             Active Fleet Anomaly Detections
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {anomalies.map((ano, idx) => (
+            {anomalies.map((ano: any, idx: number) => (
               <div
                 key={idx}
                 className="rounded-2xl border border-[#F3C7C9] bg-[#FBEAEB] p-4 space-y-2"
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-bold text-[#EB001B] font-mono">{ano.type}</span>
-                  <Badge variant={ano.severity === "HIGH" ? "danger" : "warning"}>
+                  <span className="text-sm font-bold text-[#EB001B] font-mono">
+                    {ano.metric_name || ano.type || "Risk Anomaly"}
+                  </span>
+                  <Badge variant={ano.severity === "HIGH" || ano.severity === "CRITICAL" ? "danger" : "warning"}>
                     {ano.severity} SEVERITY
                   </Badge>
                 </div>
-                <p className="text-xs text-[#141413] leading-relaxed">{ano.description}</p>
+                <p className="text-xs text-[#141413] leading-relaxed">
+                  {ano.possible_cause || ano.description}
+                </p>
                 <div className="pt-2 border-t border-[#F3C7C9] text-xs text-[#6B6862] flex items-center justify-between">
-                  <span>Mitigation: {ano.mitigation}</span>
+                  <span>
+                    Mitigation: {ano.recommended_merchant_action || ano.mitigation || "Enforce velocity limits"}
+                  </span>
                   <span className="text-[#1E824C] font-mono font-semibold">Active Defenses</span>
                 </div>
               </div>

@@ -30,10 +30,34 @@ interface OverviewTabProps {
 }
 
 export function OverviewTab({ data, onNavigateTab, onRunDemo }: OverviewTabProps) {
+  const [isMounted, setIsMounted] = React.useState(false);
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const summary = data?.summary || {};
-  const forecast = data?.forecast || [];
+  const rawForecastDays = Array.isArray(data?.forecast)
+    ? data.forecast
+    : Array.isArray(data?.forecast?.forecast_days)
+    ? data.forecast.forecast_days
+    : [];
+
+  const forecast = rawForecastDays.map((d: any) => ({
+    ...d,
+    date: d.date || `Day ${d.day_offset ?? 0}`,
+    projected_cash_inr: d.projected_cash_inr ?? d.expected_net ?? 0,
+    p90_cash_inr: d.p90_cash_inr ?? d.upper_bound ?? (d.expected_net ? Math.round(d.expected_net * 1.12) : 0),
+    p10_cash_inr: d.p10_cash_inr ?? d.lower_bound ?? (d.expected_net ? Math.round(d.expected_net * 0.88) : 0),
+  }));
+
   const recon = data?.recon || {};
-  const anomalies = data?.anomalies || [];
+  const rawAnomalies = data?.anomalies || [];
+  const anomalies = rawAnomalies.map((ano: any) => ({
+    ...ano,
+    title: ano.metric_name || ano.type || "Telemetry Anomaly",
+    description: ano.possible_cause || ano.description || "Unusual telemetry spike observed",
+    mitigation: ano.recommended_merchant_action || ano.mitigation || "Review and enforce rate limits",
+  }));
   const approvals = (data?.approvals || []).filter((a: any) => a.status === "PENDING");
   const executiveBrief = data?.executiveBrief || {};
 
@@ -190,64 +214,70 @@ export function OverviewTab({ data, onNavigateTab, onRunDemo }: OverviewTabProps
           </div>
 
           <div className="h-64 w-full pt-4">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={forecast} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorProjected" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#141413" stopOpacity={0.12} />
-                    <stop offset="95%" stopColor="#141413" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E3DDD2" />
-                <XAxis
-                  dataKey="date"
-                  stroke="#6B6862"
-                  fontSize={10}
-                  tickFormatter={(str) => str.slice(5)}
-                />
-                <YAxis
-                  stroke="#6B6862"
-                  fontSize={10}
-                  tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#FFF9EC",
-                    borderColor: "#E3DDD2",
-                    borderRadius: "12px",
-                    color: "#141413",
-                    fontSize: "12px",
-                    boxShadow: "0 4px 12px rgba(20, 20, 19, 0.08)",
-                  }}
-                  formatter={(value: any) => [`₹${Number(value).toLocaleString("en-IN")}`, ""]}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="p90_cash_inr"
-                  stroke="#6B6862"
-                  strokeDasharray="4 4"
-                  fill="none"
-                  name="Upper (P90)"
-                />
-                <Area
-                  type="monotone"
-                  dataKey="projected_cash_inr"
-                  stroke="#141413"
-                  strokeWidth={2}
-                  fillOpacity={1}
-                  fill="url(#colorProjected)"
-                  name="Projected"
-                />
-                <Area
-                  type="monotone"
-                  dataKey="p10_cash_inr"
-                  stroke="#6B6862"
-                  strokeDasharray="4 4"
-                  fill="none"
-                  name="Lower (P10)"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+            {isMounted && forecast.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={forecast} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorProjected" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#141413" stopOpacity={0.12} />
+                      <stop offset="95%" stopColor="#141413" stopOpacity={0.0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#E3DDD2" />
+                  <XAxis
+                    dataKey="date"
+                    stroke="#6B6862"
+                    fontSize={10}
+                    tickFormatter={(str) => (typeof str === "string" && str.length >= 10 ? str.slice(5) : str)}
+                  />
+                  <YAxis
+                    stroke="#6B6862"
+                    fontSize={10}
+                    tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#FFF9EC",
+                      borderColor: "#E3DDD2",
+                      borderRadius: "12px",
+                      color: "#141413",
+                      fontSize: "12px",
+                      boxShadow: "0 4px 12px rgba(20, 20, 19, 0.08)",
+                    }}
+                    formatter={(value: any) => [`₹${Number(value).toLocaleString("en-IN")}`, ""]}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="p90_cash_inr"
+                    stroke="#6B6862"
+                    strokeDasharray="4 4"
+                    fill="none"
+                    name="Upper (P90)"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="projected_cash_inr"
+                    stroke="#141413"
+                    strokeWidth={2}
+                    fillOpacity={1}
+                    fill="url(#colorProjected)"
+                    name="Projected"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="p10_cash_inr"
+                    stroke="#6B6862"
+                    strokeDasharray="4 4"
+                    fill="none"
+                    name="Lower (P10)"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-xs text-[#6B6862]">
+                Hydrating Monte Carlo simulation bands...
+              </div>
+            )}
           </div>
         </Card>
 
@@ -333,8 +363,8 @@ export function OverviewTab({ data, onNavigateTab, onRunDemo }: OverviewTabProps
                   className="rounded-xl border border-[#F3C7C9] bg-[#FBEAEB] p-3.5 space-y-1.5"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-[#EB001B]">{ano.type}</span>
-                    <Badge variant={ano.severity === "HIGH" ? "danger" : "warning"}>
+                    <span className="text-xs font-semibold text-[#EB001B]">{ano.title}</span>
+                    <Badge variant={ano.severity === "HIGH" || ano.severity === "CRITICAL" ? "danger" : "warning"}>
                       {ano.severity} SEVERITY
                     </Badge>
                   </div>

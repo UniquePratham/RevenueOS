@@ -65,6 +65,7 @@ export class RazorpayClient {
     this.keySecret = process.env.RAZORPAY_KEY_SECRET || "rzp_test_placeholder_secret";
     this.webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET || "rzp_test_webhook_secret";
     this.isDemoMode = 
+      process.env.DEMO_MODE === "true" ||
       process.env.NEXT_PUBLIC_DEMO_MODE === "true" || 
       this.keyId === "rzp_test_placeholder_key_id";
   }

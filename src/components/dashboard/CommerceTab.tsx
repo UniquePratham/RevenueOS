@@ -129,11 +129,11 @@ export function CommerceTab({ products, onRefresh }: CommerceTabProps) {
                   >
                     <div className="flex items-start justify-between">
                       <div>
-                        <div className="font-semibold text-xs text-white">{prod.title}</div>
+                        <div className="font-semibold text-xs text-white">{prod.name || prod.title}</div>
                         <div className="text-[11px] text-slate-400">{prod.category}</div>
                       </div>
                       <span className="font-mono text-xs font-bold text-sky-400">
-                        ₹{prod.price_inr.toLocaleString("en-IN")}
+                        ₹{(prod.price ?? prod.price_inr ?? 0).toLocaleString("en-IN")}
                       </span>
                     </div>
 
@@ -141,11 +141,11 @@ export function CommerceTab({ products, onRefresh }: CommerceTabProps) {
                       {prod.description}
                     </p>
 
-                    {prod.recommended_bundle && (
+                    {prod.bundles && prod.bundles.length > 0 && (
                       <div className="mt-2.5 rounded bg-indigo-950/40 border border-indigo-800/40 p-1.5 text-[10px] text-indigo-300 flex items-center justify-between">
-                        <span>Bundle Suggestion: {prod.recommended_bundle.name}</span>
+                        <span>Bundle: {prod.bundles[0].bundle_name}</span>
                         <span className="font-mono text-emerald-400 font-semibold">
-                          +{prod.recommended_bundle.discount_percent}% OFF
+                          Save ₹{prod.bundles[0].savings_inr}
                         </span>
                       </div>
                     )}
@@ -174,10 +174,10 @@ export function CommerceTab({ products, onRefresh }: CommerceTabProps) {
                     Target Purchase SKU
                   </div>
                   <div className="font-bold text-sm text-white mt-1">
-                    {selectedProduct.title}
+                    {selectedProduct.name || selectedProduct.title}
                   </div>
                   <div className="text-xs text-sky-400 font-mono mt-0.5">
-                    Base: ₹{selectedProduct.price_inr.toLocaleString("en-IN")}
+                    Base: ₹{(selectedProduct.price ?? selectedProduct.price_inr ?? 0).toLocaleString("en-IN")}
                   </div>
                 </div>
 

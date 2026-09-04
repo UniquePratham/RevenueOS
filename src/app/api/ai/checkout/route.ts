@@ -8,20 +8,57 @@ import { Order, Payment } from "@/lib/types/index";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { product_id, bundle_id, quantity = 1, customer_id = "cust_0001", customer_name = "Aarav Sharma" } = body;
+    const { 
+      product_id, 
+      bundle_id, 
+      quantity = 1, 
+      requested_discount = 0,
+      customer_id = "cust_0001", 
+      customer_name = "Aarav Sharma" 
+    } = body;
 
     const product = revenueGraph.products.get(product_id);
     if (!product) {
       return NextResponse.json({ error: `Product ${product_id} not found` }, { status: 404 });
     }
 
-    let totalAmount = product.price * quantity;
+    // Check discount policy
+    if (requested_discount > 0) {
+      const { policyEngine } = await import("@/lib/policies/policy-engine");
+      const { approvalManager } = await import("@/lib/policies/approval-manager");
+      const discountCheck = policyEngine.checkDiscount(requested_discount);
+
+      if (!discountCheck.allowed && discountCheck.requires_approval) {
+        const approvalReq = approvalManager.createRequest({
+          type: "DISCOUNT",
+          title: `Autonomous Discount Gate: ${requested_discount}% on ${product.name}`,
+          amount: Math.round(product.price * (requested_discount / 100)),
+          details: `AI Buyer requested ${requested_discount}% discount on ${product.name} (₹${product.price}). Exceeds 10% ceiling.`,
+          reason: discountCheck.reason,
+          policy_triggered: "MAX_DISCOUNT_PERCENT",
+          action_payload: { product_id, requested_discount, customer_id }
+        });
+
+        return NextResponse.json({
+          status: "POLICY_VIOLATION",
+          requires_approval: true,
+          approval_id: approvalReq.id,
+          reason: discountCheck.reason,
+          message: `Autonomous discount of ${requested_discount}% exceeds maximum ceiling (10%). Execution halted and routed to Approvals Center.`,
+        });
+      }
+    }
+
+    let rawTotal = product.price * quantity;
+    const discountMultiplier = (100 - Math.min(requested_discount, 10)) / 100;
+    let totalAmount = Math.round(rawTotal * discountMultiplier);
+
     let items = [
       {
         product_id: product.id,
         product_name: product.name,
         quantity,
-        unit_price: product.price,
+        unit_price: Math.round(product.price * discountMultiplier),
         total_price: totalAmount,
       }
     ];
@@ -50,8 +87,8 @@ export async function POST(request: Request) {
       customer_id,
       customer_name,
       items,
-      subtotal: totalAmount,
-      discount_amount: 0,
+      subtotal: rawTotal,
+      discount_amount: rawTotal - totalAmount,
       total_amount: totalAmount,
       currency: "INR",
       status: "created",

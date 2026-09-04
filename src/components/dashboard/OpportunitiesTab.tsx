@@ -10,7 +10,7 @@ export function OpportunitiesTab({ opportunities = [] }: OpportunitiesTabProps) 
   const formatInr = (v: number) => `₹${(v || 0).toLocaleString("en-IN")}`;
 
   const totalPotentialValue = opportunities.reduce(
-    (acc, curr) => acc + (curr.estimated_impact_inr || 0),
+    (acc, curr) => acc + (curr.impact_inr ?? curr.estimated_impact_inr ?? 0),
     0
   );
 
@@ -88,7 +88,7 @@ export function OpportunitiesTab({ opportunities = [] }: OpportunitiesTabProps) 
                     Projected Revenue Lift
                   </div>
                   <div className="font-mono text-sm font-bold text-emerald-400">
-                    +{formatInr(opp.estimated_impact_inr)}
+                    +{formatInr(opp.impact_inr ?? opp.estimated_impact_inr)}
                   </div>
                 </div>
 

@@ -15,8 +15,17 @@ export function FinanceTab({ recon = {}, onRefresh }: FinanceTabProps) {
 
   const filteredRecords = records.filter((r: any) => {
     if (filterType === "ALL") return true;
-    return r.status === filterType;
+    const status = r.match_status || r.status;
+    if (filterType === "DISCREPANCY") return status === "CONFLICT" || status === "UNMATCHED" || status === "DISCREPANCY";
+    return status === filterType;
   });
+
+  const totalVolume = recon.total_order_revenue_inr ?? recon.total_processed_inr ?? 1845000;
+  const matchRate = recon.match_rate_percent ?? recon.reconciliation_rate ?? 96.8;
+  const matchedCount = recon.matched_count ?? 148;
+  const conflictCount = recon.conflict_count ?? recon.discrepancy_count ?? 2;
+  const expectedSettlement = recon.expected_settlement_inr ?? (totalVolume - (recon.total_fees_inr ?? 35000));
+  const unresolvedDiscrepancy = recon.unresolved_discrepancy_inr ?? 2140;
 
   return (
     <div className="space-y-6">
@@ -36,7 +45,7 @@ export function FinanceTab({ recon = {}, onRefresh }: FinanceTabProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Badge variant="success">Recon Match: {recon.reconciliation_rate || 96.8}%</Badge>
+          <Badge variant="success">Recon Match: {matchRate}%</Badge>
           <Badge variant="warning">MDR Discrepancy Gated</Badge>
         </div>
       </div>
@@ -45,29 +54,29 @@ export function FinanceTab({ recon = {}, onRefresh }: FinanceTabProps) {
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <MetricCard
           title="Total Reconciled Volume"
-          value={formatInr(recon.total_processed_inr || 1845000)}
+          value={formatInr(totalVolume)}
           subtitle="Orders vs Gateway vs Bank"
           pill="Audited"
         />
         <MetricCard
           title="Matched Transactions"
-          value={recon.matched_count || 148}
+          value={matchedCount}
           trend="up"
-          change="96.8% Clean"
+          change={`${matchRate}% Clean`}
           subtitle="Zero penny discrepancies"
           pill="Perfect"
         />
         <MetricCard
           title="Fee/MDR Discrepancies"
-          value={recon.discrepancy_count || 2}
+          value={conflictCount}
           trend="warning"
-          change="₹2,140 under review"
+          change={`${formatInr(unresolvedDiscrepancy)} under review`}
           subtitle="Gateway vs Contract fee rate"
           pill="Flagged"
         />
         <MetricCard
           title="Expected Net Settlement"
-          value={formatInr(recon.expected_settlement_inr || 1792400)}
+          value={formatInr(expectedSettlement)}
           subtitle="T+2 scheduled bank transfer"
           pill="Settlement"
         />
@@ -89,7 +98,7 @@ export function FinanceTab({ recon = {}, onRefresh }: FinanceTabProps) {
               Layer 1: Internal Merchant Ledger
             </div>
             <div className="text-base font-bold text-white font-mono">
-              {formatInr(recon.total_processed_inr || 1845000)}
+              {formatInr(totalVolume)}
             </div>
             <p className="text-[11px] text-slate-400">
               Captures gross order amounts directly from the autonomous checkout graph and store cart.
@@ -101,7 +110,7 @@ export function FinanceTab({ recon = {}, onRefresh }: FinanceTabProps) {
               Layer 2: Razorpay Gateway Captured
             </div>
             <div className="text-base font-bold text-white font-mono">
-              {formatInr(recon.gateway_captured_inr || 1842860)}
+              {formatInr(recon.actual_settled_inr ?? recon.gateway_captured_inr ?? totalVolume - 4200)}
             </div>
             <p className="text-[11px] text-slate-400">
               Authoritative gateway payment capture records, deducts applicable 1.8% to 2.0% MDR fees.
@@ -113,7 +122,7 @@ export function FinanceTab({ recon = {}, onRefresh }: FinanceTabProps) {
               Layer 3: Bank Account Settlement
             </div>
             <div className="text-base font-bold text-white font-mono">
-              {formatInr(recon.bank_settled_inr || 1842860)}
+              {formatInr(recon.actual_settled_inr ?? recon.bank_settled_inr ?? totalVolume - 4200)}
             </div>
             <p className="text-[11px] text-slate-400">
               Verified incoming NEFT/RTGS settlement batch credit references in merchant nodal account.
@@ -133,7 +142,7 @@ export function FinanceTab({ recon = {}, onRefresh }: FinanceTabProps) {
           </div>
 
           <div className="flex items-center gap-1.5 bg-slate-900/80 p-1 rounded-lg border border-slate-800 text-xs">
-            {["ALL", "MATCHED", "DISCREPANCY", "PENDING"].map((type) => (
+            {["ALL", "MATCHED", "DISCREPANCY"].map((type) => (
               <button
                 key={type}
                 onClick={() => setFilterType(type)}
@@ -164,28 +173,34 @@ export function FinanceTab({ recon = {}, onRefresh }: FinanceTabProps) {
             </thead>
             <tbody className="divide-y divide-slate-800/60">
               {filteredRecords.map((r: any, idx: number) => {
-                const isDiscrepancy = r.status === "DISCREPANCY" || (r.discrepancy_inr && r.discrepancy_inr > 0);
+                const status = r.match_status || r.status || "MATCHED";
+                const isDiscrepancy = status === "CONFLICT" || status === "UNMATCHED" || status === "DISCREPANCY" || (r.discrepancy_amount ?? r.discrepancy_inr ?? 0) > 0;
+                const orderAmt = r.order_amount ?? r.order_amount_inr ?? 0;
+                const settledAmt = r.settled_amount ?? r.settled_amount_inr ?? 0;
+                const feeAmt = r.fee_amount ?? r.fee_inr ?? 0;
+                const discrepancyAmt = r.discrepancy_amount ?? r.discrepancy_inr ?? 0;
+
                 return (
                   <tr key={r.id || idx} className="hover:bg-slate-900/50 transition-colors">
                     <td className="py-2.5 font-mono text-slate-300">{r.order_id}</td>
                     <td className="py-2.5 font-mono text-slate-400">{r.payment_id}</td>
                     <td className="py-2.5 font-mono font-bold text-white">
-                      {formatInr(r.order_amount_inr)}
+                      {formatInr(orderAmt)}
                     </td>
                     <td className="py-2.5 font-mono text-slate-200">
-                      {formatInr(r.settled_amount_inr)}
+                      {formatInr(settledAmt)}
                     </td>
                     <td className="py-2.5 font-mono text-slate-400">
-                      {formatInr(r.fee_inr || 49)}
+                      {formatInr(feeAmt)}
                     </td>
                     <td className="py-2.5 font-mono">
                       <span className={isDiscrepancy ? "text-rose-400 font-bold" : "text-slate-400"}>
-                        {formatInr(r.discrepancy_inr || 0)}
+                        {formatInr(discrepancyAmt)}
                       </span>
                     </td>
                     <td className="py-2.5">
                       <Badge variant={isDiscrepancy ? "danger" : "success"}>
-                        {r.status || (isDiscrepancy ? "DISCREPANCY" : "MATCHED")}
+                        {status}
                       </Badge>
                     </td>
                   </tr>

@@ -7,24 +7,28 @@ interface EvaluationTabProps {
 }
 
 export function EvaluationTab({ evaluation = {} }: EvaluationTabProps) {
-  const cm = evaluation.confusion_matrix || {
-    true_positives: 142,
-    false_positives: 12,
-    true_negatives: 840,
-    false_negatives: 8,
+  const riskEval = evaluation.risk_model_evaluation || evaluation || {};
+  const rawCm = riskEval.confusion_matrix || evaluation.confusion_matrix || {};
+
+  const cm = {
+    true_positives: rawCm.true_positives ?? rawCm.true_positive ?? 142,
+    false_positives: rawCm.false_positives ?? rawCm.false_positive ?? 12,
+    true_negatives: rawCm.true_negatives ?? rawCm.true_negative ?? 840,
+    false_negatives: rawCm.false_negatives ?? rawCm.false_negative ?? 8,
   };
 
-  const metrics = evaluation.metrics || {
-    precision: 0.922,
-    recall: 0.947,
-    f1_score: 0.934,
-    accuracy: 0.98,
+  const metrics = {
+    precision: riskEval.precision ?? evaluation.precision ?? 0.922,
+    recall: riskEval.recall ?? evaluation.recall ?? 0.947,
+    f1_score: riskEval.f1_score ?? evaluation.f1_score ?? 0.934,
+    accuracy: riskEval.accuracy ?? evaluation.accuracy ?? 0.98,
   };
 
-  const economicImpact = evaluation.economic_impact || {
-    fraud_prevented_inr: 498000,
-    false_positive_friction_cost_inr: 28000,
-    net_economic_benefit_inr: 470000,
+  const rawEco = riskEval.economic_impact || evaluation.economic_impact || {};
+  const economicImpact = {
+    fraud_prevented_inr: rawEco.fraud_prevented_inr ?? rawEco.net_fraud_savings_inr ?? 498000,
+    false_positive_friction_cost_inr: rawEco.false_positive_friction_cost_inr ?? rawEco.estimated_false_positive_cost_inr ?? 28000,
+    net_economic_benefit_inr: rawEco.net_economic_benefit_inr ?? (rawEco.net_fraud_savings_inr ? rawEco.net_fraud_savings_inr - (rawEco.estimated_false_positive_cost_inr ?? 0) : 470000),
   };
 
   const formatInr = (v: number) => `₹${(v || 0).toLocaleString("en-IN")}`;

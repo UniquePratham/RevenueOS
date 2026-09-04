@@ -33,13 +33,15 @@ export function RecoveryTab({ recoveries = [], onRefresh }: RecoveryTabProps) {
     }
   };
 
+  const isRecoveredStatus = (s: string) => s?.toUpperCase() === "RECOVERED";
+
   const recoveredTotal = recoveries
-    .filter((r) => r.status === "RECOVERED")
-    .reduce((acc, curr) => acc + (curr.amount_inr || 0), 0);
+    .filter((r) => isRecoveredStatus(r.status))
+    .reduce((acc, curr) => acc + (curr.amount ?? curr.amount_inr ?? 0), 0);
 
   const atRiskTotal = recoveries
-    .filter((r) => r.status !== "RECOVERED")
-    .reduce((acc, curr) => acc + (curr.amount_inr || 0), 0);
+    .filter((r) => !isRecoveredStatus(r.status))
+    .reduce((acc, curr) => acc + (curr.amount ?? curr.amount_inr ?? 0), 0);
 
   return (
     <div className="space-y-6">
@@ -136,7 +138,7 @@ export function RecoveryTab({ recoveries = [], onRefresh }: RecoveryTabProps) {
                       >
                         <td className="py-2.5 font-mono text-slate-300">{rec.id}</td>
                         <td className="py-2.5 font-mono font-bold text-white">
-                          {formatInr(rec.amount_inr)}
+                          {formatInr(rec.amount ?? rec.amount_inr)}
                         </td>
                         <td className="py-2.5 text-slate-400 truncate max-w-[140px]">
                           {rec.failure_reason || "Gateway Timeout"}
@@ -205,7 +207,7 @@ export function RecoveryTab({ recoveries = [], onRefresh }: RecoveryTabProps) {
                   <div className="flex items-baseline justify-between pt-1">
                     <span className="text-slate-300">Recoverable Basket:</span>
                     <span className="font-mono font-bold text-emerald-400 text-base">
-                      {formatInr(selectedCandidate.amount_inr)}
+                      {formatInr(selectedCandidate.amount ?? selectedCandidate.amount_inr)}
                     </span>
                   </div>
                   <div className="text-[11px] text-slate-400">
